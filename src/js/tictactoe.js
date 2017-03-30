@@ -43,13 +43,15 @@ ComputerPlayer.prototype.chooseSquare = function chooseSquare(board) {
   position = this.checkWinConditions(board);
 
   if (position === null) {
-    return this.checkLossConditions(board);
+    position = this.checkLossConditions(board);
   } else {
     return position;
   }
 
-  return this.checkForPosition(board);
-
+  if (position === null) {
+    return this.checkForPosition(board);
+  }
+  
 }
 
 ComputerPlayer.prototype.checkWinConditions = function checkWinConditions(board) {
