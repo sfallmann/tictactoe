@@ -3,7 +3,7 @@
 
 var X = 'X';
 var O = 'O';
-var WIN = 1;
+
 var COMPUTER ='Computer';
 
 function Board(){
@@ -22,13 +22,13 @@ Player.prototype = {
   } 
 }
 
-function ComputerPlayer(shape) {
-  Player.call(this, COMPUTER, shape);
+function ComputerPlayer(name, shape) {
+  Player.call(this, name, shape);
   this.opponent = this.shape === X ? O : X;
 }
 
 ComputerPlayer.prototype = Object.create(Player.prototype);
-ComputerPlayer.constructor = ComputerPlayer;
+ComputerPlayer.prototype.constructor = ComputerPlayer;
 
 ComputerPlayer.prototype.chooseSquare = function chooseSquare(board) {
 
@@ -197,14 +197,28 @@ function Game(player1, player2) {
   this.player2 = player2;
   
   this.currentPlayer = player1;
+  this.winner;
 
 }
 
 Game.prototype = {
 
   playTurn: function playTurn(position) {
-    this.currentPlayer.occupySquare(position);
-    this.board.squares[position] = this.currentPlayer.shape;
+    var winner = false;
+
+      if ('chooseSquare' in p1) {
+        var position = p1.occupySquare(game.board);
+        game.playTurn(position);
+        console.log(p1.name, position);
+        winner = game.checkWin();
+      }
+    
+      if ('chooseSquare' in p2) {
+        var position = p2.occupySquare(game.board);
+        game.playTurn(position);
+        console.log(p2.name, position);
+        winner = game.checkWin();
+      }
   },
 
   checkWin: function checkWin() {
@@ -213,26 +227,26 @@ Game.prototype = {
 
     for (var i = 0; i < 3; i++) {   
       if (squares[i] && squares[i + 1] && squares[i + 2]){
-        return WIN;
+        return true;
       }
 
       if (squares[i] && squares[i + 3] && squares[i + 6]){
-        return WIN;
+        return true;
       }      
     }
 
     if (squares[0] && squares[4] && squares[8]) {
-      return WIN;
+      return true;
     }
 
     if (squares[2] && squares[4] && squares[6]) {
-      return WIN;
+      return true;
     }    
 
     this.currentPlayer === this.player1 
       ? this.currentPlayer = this.player2 : this.currentPlayer = this.player1;
 
-    return 0;
+    return false;
   }
 }
 
@@ -246,3 +260,14 @@ function emptyBoard(board){
 
   return true;
 }
+
+var p1 = new ComputerPlayer('Sean', X);
+var p2 = new ComputerPlayer(COMPUTER, O);
+var game = new Game(p1, p2);
+console.log(p1);
+console.log(p2);
+console.log(game);
+
+console.log('checkLossConditions' in p1);
+
+
