@@ -3,8 +3,95 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      td{
+        border: 1px solid black;
+        width: 100px;
+        height: 100px;
+        font-size: 2em;
+        text-align: center;
+      }
+    </style>
   </head>
   <body>
-    <script src="src/js/tictactoe.js"></script>
+    <table>
+      <tr></tr>
+      <tr></tr>
+      <tr></tr>
+    </table>
+    <div id="messages"></div>
+    <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
+    <script src="src/js/tic-tac-toe.js"></script>
+    <script>
+
+      var ui = {
+        gamegrid: document.querySelector('table'),
+        init: function init() {
+          var player1 = Player.create('Sean', 'O', 'human');
+          var player2 = Player.create('Michelle', 'X', 'computer');
+          this.game = TicTacToe.create([player1, player2], Board.create(3, 3, Tile));          
+          this.gamegrid.addEventListener("click", this.clickedSquare.bind(this));
+          this.drawBoard(this.game.board);
+        },
+        drawBoard: function drawBoard(board) {
+          var rows = document.getElementsByTagName('tr');
+          var td;
+          for (var i = board.rows - 1; i >= 0; i--) {
+            for (var j = 0; j < board.cols; j++) {
+              td = document.createElement('td');
+              td.dataset.x = j;
+              td.dataset.y = i;
+              rows[2-i].appendChild(td);
+            } 
+          }
+        },
+        displayMessage: function(msg) {
+          var messages = document.querySelector('#messages');
+          messages.innerHTML = msg;
+        },
+        placeToken: function placeToken(target, token){
+          target.innerHTML = token;
+        },
+        clickedSquare: function clickedSquare(e) {
+          if (!this.game.over() && this.game.currentPlayer().type === 'human'){
+            var target = e.target;
+            var x = target.dataset.x;
+            var y = target.dataset.y;
+            var player = this.game.currentPlayer();
+            var token = player.token;
+            var tile = this.game.turn(player, x, y);
+            this.placeToken(target, token);
+            this.turnComplete();
+          }
+        },  
+        computersTurn: function computersTurn() {
+          var player = this.game.currentPlayer();
+          var token = player.token;
+          var tile = this.game.turn(player);  
+          var x = '[data-x="' + tile.x + '"]';
+          var y = '[data-y="' + tile.y + '"]';
+          var target = document.querySelector(x+y);
+          this.placeToken(target, token);
+          this.turnComplete();       
+        },
+        turnComplete: function turnComplete() {
+          this.game.queueNextPlayer();
+          if (this.game.over()){
+            this.gamegrid.removeEventListener("click", this.clickedSquare);
+            if(this.game.winner){
+              this.displayMessage(this.game.winner + ' has won the game!!!');
+            } else {
+              this.displayMessage('DRAW!!!');
+            }    
+            return;
+          }
+          if (this.game.currentPlayer().type === 'computer') {
+            setTimeout(this.computersTurn.bind(this), 1000);
+          }
+        }        
+      };
+
+      ui.init();
+    </script>
   </body>
 </html>
