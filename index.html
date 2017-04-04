@@ -23,21 +23,32 @@
     <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
     <script src="src/js/tic-tac-toe.js"></script>
     <script>
-
+      // var player1 = Player.create('Sean', 'O', 'human');
+      //var player2 = Player.create('Michelle', 'X', 'computer');
+      var player1 = {
+        name: 'Sean',
+        token: 'O',
+        type: 'human'
+      };
+      var player2 = {
+        name: 'Michelle',
+        token: 'X',
+        type: 'computer'
+      }
+      
       var ui = {
         gamegrid: document.querySelector('table'),
         init: function init() {
-          var player1 = Player.create('Sean', 'O', 'human');
-          var player2 = Player.create('Michelle', 'X', 'computer');
-          this.game = TicTacToe.create([player1, player2], Board.create(3, 3, Tile));          
+
+          this.game = TicTacToe.create(player1, player2);          
           this.gamegrid.addEventListener("click", this.clickedSquare.bind(this));
           this.drawBoard(this.game.board);
         },
         drawBoard: function drawBoard(board) {
           var rows = document.getElementsByTagName('tr');
           var td;
-          for (var i = board.rows - 1; i >= 0; i--) {
-            for (var j = 0; j < board.cols; j++) {
+          for (var i = board.rows() - 1; i >= 0; i--) {
+            for (var j = 0; j < board.cols(); j++) {
               td = document.createElement('td');
               td.dataset.x = j;
               td.dataset.y = i;
@@ -53,6 +64,11 @@
           target.innerHTML = token;
         },
         clickedSquare: function clickedSquare(e) {
+
+          if (e.target.tagName !== 'TD'){
+            return;
+          }
+
           if (!this.game.over() && this.game.currentPlayer().type === 'human'){
             var target = e.target;
             var x = target.dataset.x;
@@ -86,7 +102,7 @@
             return;
           }
           if (this.game.currentPlayer().type === 'computer') {
-            setTimeout(this.computersTurn.bind(this), 1000);
+            setTimeout(this.computersTurn.bind(this));
           }
         }        
       };
