@@ -14,35 +14,36 @@
     </style>
   </head>
   <body>
-    <table>
+    <br>
+    First Name<input name='firstname' type='text'>
+    <br>
+    Token<input name='token' type='text'>
+    <br>
+    <input id="start" type="button" value="start" onclick=start()>
+    <br>
+    <br>
+    <table class='clickable'>
       <tr></tr>
       <tr></tr>
       <tr></tr>
     </table>
     <div id="messages"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
     <script src="src/js/tic-tac-toe.js"></script>
     <script>
-      var player1 = {
-        name: 'Sean',
-        token: 'O',
-        type: 'computer'
-      };
-      var player2 = {
-        name: 'Michelle',
-        token: 'X',
-        type: 'human'
-      }
+
       
       var ui = {
         gamegrid: document.querySelector('table'),
-        init: function init() {
+        init: function init(player1, player2) {
           this.game = TicTacToe(player1, player2);          
           this.gamegrid.addEventListener("click", this.clickedSquare.bind(this));
           this.drawBoard();
           var player = this.game.players[0];
+          this.displayMessage(player.name + '\'s turn');
           if (player.type === 'computer'){
-            setTimeout(this.computersTurn.bind(this), 1000);
+            setTimeout(this.computersTurn.bind(this), 1500);
           }
         },
         drawBoard: function drawBoard(board) {
@@ -65,6 +66,9 @@
           target.innerHTML = token;
         },
         clickedSquare: function clickedSquare(e) {
+          if (!this.gamegrid.classList.contains('clickable') || !this.isSquareEmpty(e.target)){
+            return;
+          }
           var player = this.game.players[0];
           var status = checkForWin(this.game.board, this.game.counter);
           if (status === CONTINUE && player.type === 'human'){
@@ -78,7 +82,7 @@
           }
         },  
         computersTurn: function computersTurn() {
-          console.log('here')
+          this.gamegrid.classList.toggle('clickable');
           var player = this.game.players[0];
           var token = player.token;
           var tile = this.game.turn();  
@@ -86,27 +90,67 @@
           var y = '[data-y="' + tile.y + '"]';
           var target = document.querySelector(x+y);
           this.placeToken(target, token);
+          this.gamegrid.classList.toggle('clickable');
           this.turnComplete();       
         },
         turnComplete: function turnComplete() {
           var status = checkForWin(this.game.board, this.game.counter);
+
           if (status !== CONTINUE){
             this.gamegrid.removeEventListener("click", this.clickedSquare);
             if(status !== DRAW){
-              this.displayMessage(status + ' has won the game!!!');
+              var player = (this.game.players.filter(function(player){
+                return player.token == status;
+              }))[0];
+              this.displayMessage(player.name + ' has won the game!!!');
             } else {
               this.displayMessage(status);
             }    
             return;
           }
           var player = this.game.players[0];
+          this.displayMessage(player.name + '\'s turn');
           if (player.type === 'computer') {
-            setTimeout(this.computersTurn.bind(this), 1000);
+            setTimeout(this.computersTurn.bind(this), 1500);
           }
+        },
+        isSquareEmpty: function isSquareEmpty(target){
+          return target.innerHTML === '' ? true : false;
         }        
       };
+      function start(){
+        var name = document.querySelector('[name=firstname]').value;
+        var token = document.querySelector('[name=firstname]').value;
 
-      ui.init();
+        var player1, player2;
+
+        if (token === 'O'){
+          player1 = {
+            name: 'Sean',
+            token: 'O',
+            type: 'human'
+          };
+          player2 = {
+            name: 'Computer',
+            token: 'X',
+            type: 'computer'
+          };
+        } else {
+          player1 = {
+            name: 'Computer',
+            token: 'O',
+            type: 'computer'
+          };  
+          player2 = {
+            name: 'Sean',
+            token: 'X',
+            type: 'human'
+          };     
+        }
+        
+        ui.init(player1, player2);  
+      }
+
     </script>
   </body>
 </html>
