@@ -52,7 +52,7 @@ function computerTurn(state, computer, opponent){
   var choice;
 
   miniMax(state, 0);
-  console.log(choice)
+
   return choice;
   
   function miniMax(state, depth) {
@@ -79,8 +79,10 @@ function computerTurn(state, computer, opponent){
           newState.board[x][y] = token;
           newState.counter++;
           changePlayers(newState.players);
+
           scores.push(miniMax(newState, depth))
           moves.push({x: x, y: y});
+          console.log(scores, moves)
         }
       }
     }
@@ -173,7 +175,7 @@ var TicTacToe = function TicTacToe(p1, p2) {
   }
 }
 
-/*
+
 var player1 = {
   name: 'Sean',
   token: 'O',
@@ -184,8 +186,8 @@ var player2 = {
   token: 'X',
   type: 'computer'
 }
-
-var game = ticTacToe(player1, player2);
+/*
+var game = TicTacToe(player1, player2);
 var over = false
 while(!over){
   
@@ -198,6 +200,5 @@ while(!over){
   }
 
 }
-
 */
 
