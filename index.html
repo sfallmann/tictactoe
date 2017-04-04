@@ -23,32 +23,33 @@
     <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
     <script src="src/js/tic-tac-toe.js"></script>
     <script>
-      // var player1 = Player.create('Sean', 'O', 'human');
-      //var player2 = Player.create('Michelle', 'X', 'computer');
       var player1 = {
         name: 'Sean',
         token: 'O',
-        type: 'human'
+        type: 'computer'
       };
       var player2 = {
         name: 'Michelle',
         token: 'X',
-        type: 'computer'
+        type: 'human'
       }
       
       var ui = {
         gamegrid: document.querySelector('table'),
         init: function init() {
-
-          this.game = TicTacToe.create(player1, player2);          
+          this.game = TicTacToe(player1, player2);          
           this.gamegrid.addEventListener("click", this.clickedSquare.bind(this));
-          this.drawBoard(this.game.board);
+          this.drawBoard();
+          var player = this.game.players[0];
+          if (player.type === 'computer'){
+            setTimeout(this.computersTurn.bind(this), 1000);
+          }
         },
         drawBoard: function drawBoard(board) {
           var rows = document.getElementsByTagName('tr');
           var td;
-          for (var i = board.rows() - 1; i >= 0; i--) {
-            for (var j = 0; j < board.cols(); j++) {
+          for (var i = 3 - 1; i >= 0; i--) {
+            for (var j = 0; j < 3; j++) {
               td = document.createElement('td');
               td.dataset.x = j;
               td.dataset.y = i;
@@ -64,26 +65,23 @@
           target.innerHTML = token;
         },
         clickedSquare: function clickedSquare(e) {
-
-          if (e.target.tagName !== 'TD'){
-            return;
-          }
-
-          if (!this.game.over() && this.game.currentPlayer().type === 'human'){
+          var player = this.game.players[0];
+          var status = checkForWin(this.game.board, this.game.counter);
+          if (status === CONTINUE && player.type === 'human'){
             var target = e.target;
             var x = target.dataset.x;
             var y = target.dataset.y;
-            var player = this.game.currentPlayer();
             var token = player.token;
-            var tile = this.game.turn(player, x, y);
+            this.game.turn(x, y);
             this.placeToken(target, token);
             this.turnComplete();
           }
         },  
         computersTurn: function computersTurn() {
-          var player = this.game.currentPlayer();
+          console.log('here')
+          var player = this.game.players[0];
           var token = player.token;
-          var tile = this.game.turn(player);  
+          var tile = this.game.turn();  
           var x = '[data-x="' + tile.x + '"]';
           var y = '[data-y="' + tile.y + '"]';
           var target = document.querySelector(x+y);
@@ -91,18 +89,19 @@
           this.turnComplete();       
         },
         turnComplete: function turnComplete() {
-          this.game.queueNextPlayer();
-          if (this.game.over()){
+          var status = checkForWin(this.game.board, this.game.counter);
+          if (status !== CONTINUE){
             this.gamegrid.removeEventListener("click", this.clickedSquare);
-            if(this.game.winner){
-              this.displayMessage(this.game.winner + ' has won the game!!!');
+            if(status !== DRAW){
+              this.displayMessage(status + ' has won the game!!!');
             } else {
-              this.displayMessage('DRAW!!!');
+              this.displayMessage(status);
             }    
             return;
           }
-          if (this.game.currentPlayer().type === 'computer') {
-            setTimeout(this.computersTurn.bind(this));
+          var player = this.game.players[0];
+          if (player.type === 'computer') {
+            setTimeout(this.computersTurn.bind(this), 1000);
           }
         }        
       };

@@ -4,340 +4,200 @@ if(typeof require !== 'undefined'){
   var _ = require('lodash');
 }
 
-var X = 'X';
-var O = 'O';
-var COMPLETE ='Completed';
-var INPROGRESS = 'INPROGRESS';
+var DRAW = 'DRAW';
+var CONTINUE = 'CONTINUE';
 
-function compareTiles(a,b,c) {
-  if (a && b && c){
-    return a==b && b==c;
+function createBoard(cols, rows) {
+  var board = [], col;
+  for (var i = 0; i < rows; i++) {
+    col = [];
+    for (var j = 0; j < cols; j++) {
+      col.push('');
+    }
+    board.push(col);
   }
-  return false;
+  return board;
 }
 
-var Tile = (function(){
-
-  var tileProto = {
-    info: info,
-  }
-
-  function create(x, y, value){
-    return Object.assign(Object.create(tileProto), {x, y, value});
-  }
-
-  function info(x, y, token){
-    return {
-      x: this.x,
-      y: this.y,
-      value: this.value
-    }
-  }
- return {
-  create: create
- }
-})();
-
-var Board = (function(){
-
-  var boardProto = {
-    rows: function rows() {return this._rows},
-    cols: function cols() {return this._cols},
-    TileCtr: function TileCtr() {return this._tileCtr},
-    tiles: function tiles() {
-      return this._tiles.map(function(tile){
-          return tile.info();
-      });
-    },
-    tile: tile,
-    isEmpty: isEmpty,
-    emptyTiles: emptyTiles,
-    getCols: getCols,
-    getRows: getRows
-  }
-
-  function create(_cols, _rows, _tileCtr) {
-    var newboard = Object.assign(Object.create(boardProto), {_cols, _rows, _tileCtr});
-    newboard._tiles = generate(newboard._cols, newboard._rows, newboard._tileCtr);
-    return newboard;
-  }
-
-  function generate(cols, rows, tileCtr) {
-
-    var tiles = [];
-    for (var i = 0; i < cols; i++) {
-      for (var j = 0; j < rows; j++) {
-        tiles.push(tileCtr.create(j, i, ''));
-      }
-    }
-    return tiles;
-  }
-
-  function isEmpty(board){
-    for (var i = 0; i < this.tiles.length; i++){
-      if (this.tiles()[0].value){
+function isBoardEmpty(board){
+  for (var i = 0; i < rows; i++) {
+    for (var j = 0; j < cols; j++) {
+      if (board[i][j]){
         return false;
       }
     }
-    return true;
+  }
+  return true;
+}
+
+function returnTile(x, y, token) {
+  return {x: x, y: y, token: token}
+}
+
+function setTile(board, x, y, token) {
+  board[x][y] = token;
+  return returnTile(x, y, token);
+}
+
+function humanTurn(tile){
+  return tile;
+}
+
+function computerTurn(state, computer, opponent){
+
+  if (state.counter === 0){
+    return {x: 0, y: 0}
   }
 
-  function emptyTiles(){
-    return this.tiles().filter(function(tile){
-      if (!tile.value) {
-        return tile;
-      }
-    })
-  }
+  var choice;
 
-  function tile(x, y, token){
-    var tileFilter = this._tiles.filter(function(tile){
-        return tile.x == Number(x) && tile.y == Number(y);
-    });
-    var tile = tileFilter[0];
-
-    if (token){
-      tile.value = token;
-    }
-    return tile.info();
-  }
-
-  function getCols() {
-    var cols = [];
-
-    for (var x = 0; x < this.rows(); x++){
-      var col = [];
-      for (var y = 0; y < this.cols(); y++) {
-        col.push(this.tile(x, y).value);
-      }
-      cols.push(col);
-    }
-    return cols;
-  }
-
-  function getRows() {
-    var rows = [];
-
-    for (var y = 0; y < this.cols(); y++){
-      var row = [];
-      for (var x = 0; x < this.rows(); x++) {
-        row.push(this.tile(x, y).value);
-      }
-      rows.push(row);
-    }
-    return rows;
-  }  
-
-  return {
-    create: create
-  }
-
-})();
-
-var Player = (function(){
-
-  var playerProto = {
-    name: function name() { return this._name; },
-    type: function type() { return this._type; },
-    token: function token() { return this._token; },
-    info: function info() {
-      return {
-        name: this.name(),
-        type: this.type(),
-        token: this.token()
-      };
-    }
-  }
-  function create(_name, _token, _type){
-      return Object.assign(Object.create(playerProto), {_name, _token, _type});
-  };
-
-  return {
-    create: create
-  }
-
-})();
-
-var TicTacToe = (function() {
-
-  var ticTacToeProto = {
-    _maxTurns: 9,
-    _counter: 0,
-    maxTurns: function maxTurns() {return this._maxTurns;},
-    counter: function counter(inc) {
-      if (inc) {
-        this._counter += inc;
-      }
-      return this._counter;
-    },
-    turn: turn,
-    getPlayer: getPlayer,
-    currentPlayer: currentPlayer,        
-    queueNextPlayer: queueNextPlayer,
-    over: over,
-    status: INPROGRESS,
-    winner: undefined,
-    chooseTile: chooseTile
-  }
-
-  function info(){
-
-    return {
-      counter: this.counter(),
-      maxTurns: this.maxTurns(),
-      players: [this.players[0].info(), this.players[1].info()],
-      board: this.board,
-    }
-  }
-
-
-  function create(p1, p2) {
-
-    var newgame = Object.create(ticTacToeProto);
-    
-    newgame.board = Board.create(3, 3, Tile);
-    newgame.players = [
-      Player.create(p1.name, p1.token, p1.type),
-      Player.create(p2.name, p2.token, p2.type),
-    ]
-
-    return newgame;
-  }
-
-  function getPlayer(name){
-    return (this.players.filter(function(player){
-      return player.name() === name;
-    }))[0];
-  }
-
-  function chooseTile() {
-    
-    var me = this.currentPlayer().token;
-    var opponent;
-
-    if (me === 'O') {
-      opponent = 'X';
-    } else {
-      opponent = 'O';
+  miniMax(state, 0);
+  console.log(choice)
+  return choice;
+  
+  function miniMax(state, depth) {
+    var result = checkForWin(state.board, state.counter);
+    if (result === computer){
+      return 10 - depth;
+    } else if (result === opponent) {
+      return depth - 10;
+    } else if (result === DRAW) {
+      return 0;
     }
 
-    var choice;
-    
+    depth++;
 
-    minimax(_.cloneDeep(this), 0);
-    return choice;
-    
-    function minimax(game, depth) {
+    var moves = [];
+    var scores = [];
+    var token = state.players[0].token;
+    var newState;
 
-      if (game.over()){
-
-        if (game.winner === me){
-          return 10 - depth;
-        } else if (game.winner === opponent) {
-          return depth - 10;
-        } else {
-          return 0;
+    for (var x = 0; x < 3; x++) {
+      for (var y = 0; y < 3; y++){
+        if (!state.board[x][y]) {
+          newState = _.cloneDeep(state);
+          newState.board[x][y] = token;
+          newState.counter++;
+          changePlayers(newState.players);
+          scores.push(miniMax(newState, depth))
+          moves.push({x: x, y: y});
         }
-
       }
-
-      depth++;
-
-      var moves = [];
-      var scores = [];
-      var token = game.currentPlayer().token;
-      game.board.emptyTiles().forEach(function(tile){
-        var potentialGame = _.cloneDeep(game);
-        potentialGame.board.tile(tile.x, tile.y, token);
-        potentialGame.queueNextPlayer();       
-
-        scores.push(minimax(potentialGame, depth));
-        moves.push(tile);
+    }
+    if (token === computer){
+      var maxValue = scores.reduce(function(acc, curr){
+        return Math.max(acc, curr);
       });
-      if (token === me){
-        var maxValue = scores.reduce(function(acc, curr){
-          return Math.max(acc, curr);
-        });
-        var maxIndex = scores.indexOf(maxValue);
-        choice = moves[maxIndex];
-        return scores[maxIndex];
-      }
-
-      if (token === opponent){
-        var minValue = scores.reduce(function(acc, curr){
-          return Math.min(acc, curr);
-        });
-        var minIndex = scores.indexOf(minValue);
-        choice = moves[minIndex];
-        return scores[minIndex];
-      }      
-
-    }
-  }
-
-
-  function turn(player, x, y) {
-    if (player.type === 'computer') {
-      var t = this.chooseTile();
-      return this.board.tile(t.x, t.y, player.token);
-
-    } else {
-      return this.board.tile(x, y, player.token);
-    }
-  }
-
-  function queueNextPlayer(){
-    this.counter(1);
-    var player = this.players.shift();
-    this.players.push(player);
-    return this.currentPlayer();
-  }
-
-  function currentPlayer(){
-    var player = this.players[0].info();
-    return player;
-  }
-
-  function over(){
-    var cols = this.board.getCols();
-    var rows = this.board.getRows();
-    var self =  this;
-
-    cols.forEach(function(col){
-      if (col[0] && (col[0] === col[1] && col[1] === col[2])) {
-        self.status = COMPLETE;
-        self.winner = col[0];
-        return true;
-      }
-    });
-
-    rows.forEach(function(row){
-      if (row[0] && (row[0] === row[1] && row[1] === row[2])) {
-        self.status = COMPLETE;
-        self.winner = row[0];
-        return true;
-      }
-    });
-
-    if (cols[1][1]){
-
-      if (cols[0][0] === cols[1][1] && cols[1][1] === cols[2][2] ||
-      cols[0][2] === cols[1][1] && cols[1][1] === cols[2][0]) {
-        self.status = COMPLETE;
-        self.winner = cols[1][1];
-        return true;
-      }
+      var maxIndex = scores.indexOf(maxValue);
+      choice = moves[maxIndex];
+      return scores[maxIndex];
     }
 
-    if (this.counter() === this.maxTurns()){
-      this.status = COMPLETE;
-      return true;
-    }
-    return false;
+    if (token === opponent){
+      var minValue = scores.reduce(function(acc, curr){
+        return Math.min(acc, curr);
+      });
+      var minIndex = scores.indexOf(minValue);
+      choice = moves[minIndex];
+      return scores[minIndex];
+    }  
+
   }
+}
+
+function createState(game){
+  var state = {
+    board: game.board.slice(),
+    players: game.players.slice(),
+    counter: game.counter
+  }
+  return state;
+}
+
+
+function checkForWin(board, counter) {
+
+  for (var x = 0, y = 0; x < 3, y < 3; x++, y++) {
+    if ((board[x][0] === board[x][1] && board[x][1] === board[x][2]) && board[x][0]){
+      return board[x][0];
+    }
+    if ((board[0][y] === board[1][y] && board[1][y] === board[2][y]) && board[0][y]){
+      return board[0][y];
+    }   
+  }
+
+  if ((board[0][0] === board[1][1] && board[1][1] === board[2][2]) && board[0][0]){
+    return board[0][0];
+  } 
+
+  if ((board[0][2] === board[1][1] && board[1][1] === board[2][0]) && board[0][2]){
+    return board[0][2];
+  } 
+
+  if (counter === 9){
+    return DRAW;
+  }
+
+  return CONTINUE;
+}
+
+function changePlayers(players){
+  var player = players.pop();
+  players.unshift(player);
+}
+
+var TicTacToe = function TicTacToe(p1, p2) {
+
+  var counter = 0;
+  var board = createBoard(3, 3);
 
   return {
-    create: create,
+    counter: counter,
+    players: [p1, p2],
+    board: createBoard(3, 3),
+    turn: function turn(x, y){
+      var tile;
+      var token = this.players[0].token
+      var type = this.players[0].type;
+      if (type === 'computer'){
+        var opponent = this.players[1].token;
+        var result = computerTurn(createState(this), token, opponent);
+        x = result.x;
+        y = result.y;
+      }
+      tile = setTile(this.board, x, y, token)
+      this.counter++;
+      changePlayers(this.players)
+      return tile;
+    }
+  }
+}
+
+/*
+var player1 = {
+  name: 'Sean',
+  token: 'O',
+  type: 'computer'
+};
+var player2 = {
+  name: 'Michelle',
+  token: 'X',
+  type: 'computer'
+}
+
+var game = ticTacToe(player1, player2);
+var over = false
+while(!over){
+  
+  console.log(game.turn());
+  console.log(game.board);
+  var result = checkForWin(game.board, game.counter);
+  console.log(result)
+  if(result !== CONTINUE){
+    over = true;
   }
 
-})();
+}
+
+*/
+
