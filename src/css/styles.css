@@ -3,13 +3,16 @@
   box-sizing: border-box;
 }
 
+body {
+  background: url('../../assets/img/graph_paper.gif') repeat;
+  font-family: 'Architects Daughter', cursive;
+}
+
 .row::after {
     content: "";
     clear: both;
     display: table;
 }
-
-
 
 [class*="col-"] {
     float: left;
@@ -20,6 +23,7 @@
 [class*="col-"] {
     width: 100%;
 }
+
 
 .img {
     display:block;
@@ -74,6 +78,12 @@ table {
   height: 322px;
 }
 
+#messages {
+  height: 2.75em;
+  font-size: 2.75em;
+  text-align: center;
+}
+
 td{
   width: 100px;
   height: 100px;
@@ -123,7 +133,7 @@ object {
 .overlay, .wrapper {
   position: relative;
 }
-.nopadding {
+.nopadding, tr {
   margin: 0;
   padding: 0;
 }
@@ -137,7 +147,7 @@ object {
 
 
   .container {
-    margin: 150px 200px 0 200px;
+    margin: 0 200px 0 200px;
   }
 
   .col-1 {width: 8.33%;}
