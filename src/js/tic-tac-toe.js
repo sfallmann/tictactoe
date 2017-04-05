@@ -82,7 +82,6 @@ function computerTurn(state, computer, opponent){
 
           scores.push(miniMax(newState, depth))
           moves.push({x: x, y: y});
-          console.log(scores, moves)
         }
       }
     }

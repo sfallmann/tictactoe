@@ -3,39 +3,52 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-      td{
-        border: 1px solid black;
-        width: 100px;
-        height: 100px;
-        font-size: 2em;
-        text-align: center;
-      }
-    </style>
+    <link rel="stylesheet" href="src/css/styles.css">
   </head>
+
+
   <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4 no-padding">
+          <div class="wrapper">
+            <img id="grid-svg" src="assets/img/grid.svg">
+            <table id="grid" class='clickable' class='clickable'>
+              <tr></tr>
+              <tr></tr>
+              <tr></tr>
+            </table>              
+          </div>       
+          
+        </div>
+        <div class="col-4">
+  
+        </div>
+      </div>
+    </div>
+
     <br>
     First Name<input name='firstname' type='text'>
     <br>
-    Token<input name='token' type='text'>
+    <input type="radio" name="token" value="O"> O
+    <br>
+    <input type="radio" name="token" value="X"> X
     <br>
     <input id="start" type="button" value="start" onclick=start()>
     <br>
     <br>
-    <table class='clickable'>
-      <tr></tr>
-      <tr></tr>
-      <tr></tr>
-    </table>
+
     <div id="messages"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js"></script>
     <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
     <script src="src/js/tic-tac-toe.js"></script>
     <script>
 
-      
       var ui = {
-        gamegrid: document.querySelector('table'),
+        O: 'assets/img/o-ttt.svg',
+        X: 'assets/img/x-ttt.svg',
+        gamegrid: document.querySelector('#grid'),
         init: function init(player1, player2) {
           this.game = TicTacToe(player1, player2);          
           this.gamegrid.addEventListener("click", this.clickedSquare.bind(this));
@@ -63,7 +76,12 @@
           messages.innerHTML = msg;
         },
         placeToken: function placeToken(target, token){
-          target.innerHTML = token;
+          tokenImg = document.createElement ('object');
+          tokenImg.data = this[token];
+          tokenImg.type = 'image/svg+xml';
+          tokenImg.classList.add('token');
+          target.appendChild(tokenImg);
+          //TweenLite.to(tokenImg, 2, {color:"red"});
         },
         clickedSquare: function clickedSquare(e) {
           if (!this.gamegrid.classList.contains('clickable') || !this.isSquareEmpty(e.target)){
@@ -120,10 +138,10 @@
       };
       function start(){
         var name = document.querySelector('[name=firstname]').value;
-        var token = document.querySelector('[name=firstname]').value;
+        var token = document.querySelector('[name=token]:checked').value;
 
         var player1, player2;
-
+        console.log(token)
         if (token === 'O'){
           player1 = {
             name: 'Sean',

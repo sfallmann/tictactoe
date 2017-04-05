@@ -1,0 +1,180 @@
+
+* {
+  box-sizing: border-box;
+}
+
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+
+
+[class*="col-"] {
+    float: left;
+    padding: 15px;
+}
+
+/* For mobile phones: */
+[class*="col-"] {
+    width: 100%;
+}
+
+.img {
+    display:block;
+    margin:auto;
+    max-width: 100%;
+}
+
+.btn {
+  cursor: pointer;
+}
+
+iframe {
+  /*min-height: 520px;*/
+  max-width: 75%;
+  min-width: 290px;
+  border-color: white;
+  border-style: solid;
+  width: 100%;
+  overflow: hidden; 
+}
+
+.fixed {
+  padding: 0;
+  position: fixed;
+  z-index: 10;
+}
+
+.hidden {
+  display: none;
+}
+
+#paper {
+  position: relative;
+  min-width: 480px;
+}
+
+#grid-svg {
+  position: relative;
+  width: 320px;
+}
+
+#grid {
+  position: absolute;
+  top: 2px;
+  z-index: 10;
+  left: 1px;
+}
+
+table {
+  width: 320px;
+  height: 322px;
+  height: 322px;
+}
+
+td{
+  width: 100px;
+  height: 100px;
+  text-align: center;
+}
+object {
+  width: 100px;
+  height: 100px;
+}
+
+.token {
+  height: 65px;
+}
+
+.grids-vertical {
+  height: 0px;
+  width: 40px;
+  position: relative;
+  top: -525px;
+}
+
+.left-vertical {
+  height: 0;
+  left: 125px;
+}
+
+.right-vertical {
+  left: 265px;
+}
+
+.grids-horizontal {
+  height: 40px;
+  width: 0;
+  left: 20px;
+  position: relative;
+}
+
+.top-horizontal {
+  top: -835px;
+}
+
+.bottom-horizontal {
+  top: -725px;
+}
+
+
+.overlay, .wrapper {
+  position: relative;
+}
+.nopadding {
+  margin: 0;
+  padding: 0;
+}
+
+#canvas {
+  width: 600px;
+  height: 600px;
+}
+
+@media only screen and (min-width: 768px) and (orientation: landscape) {
+
+
+  .container {
+    margin: 150px 200px 0 200px;
+  }
+
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
+
+}
+
+
+@media only screen and (min-width: 1921px) {
+  * {
+    font-size: 48px;
+  }
+
+}
+
+@media only screen and (min-width: 1921px) and (orientation: landscape) {
+  .col-1-xl {width: 8.33%;}
+  .col-2-xl {width: 16.66%;}
+  .col-3-xl {width: 25%;}
+  .col-4-xl {width: 33.33%;}
+  .col-5-xl {width: 41.66%;}
+  .col-6-xl {width: 50%;}
+  .col-7-xl {width: 58.33%;}
+  .col-8-xl {width: 66.66%;}
+  .col-9-xl {width: 75%;}
+  .col-10-xl {width: 83.33%;}
+  .col-11-xl {width: 91.66%;}
+  .col-12-xl {width: 100%;}
+
+}
