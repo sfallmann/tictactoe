@@ -6,18 +6,13 @@
     <link href="https://fonts.googleapis.com/css?family=Architects+Daughter" rel="stylesheet">
     <link rel="stylesheet" href="src/css/styles.css">
   </head>
-
-
-  <body>
     <div class="container">
       <div class="row">
-        <div class="col-3"></div>
-        <div class="col-6"><p id="messages" class="nopadding"></p></div>
-        <div class="col-3"></div>
+        <div class="col-12"><p id="messages"></p></div>
       </div>      
-      <div class="row">
+      <div id="gameboard" class="row hidden">
         <div class="col-4"></div>
-        <div class="col-4 no-padding">
+        <div class="col-4">
           <div class="wrapper">
             <img id="grid-svg" src="assets/img/grid.svg">
             <table id="grid" class="clickable">
@@ -29,25 +24,42 @@
         </div>
         <div class="col-4">
         </div>
-      </div>
-    </div>
-    <br>
-    First Name<input name='firstname' type='text'>
-    <br>
-    <input type="radio" name="token" value="O"> O
-    <br>
-    <input type="radio" name="token" value="X"> X
-    <br>
-    <input id="start" type="button" value="start" onclick=start()>
-    <br>
-    <br>
+      </div>        
+      <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4 wrapper">
+          <div id="modal" class="hidden">
+            <div>
+              <img id="close-modal" class="btn" src="assets/img/x-ttt.svg" onclick=closeModal()>
+              <p id="modal-msg"></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-4"></div>
+      </div>    
+      <div class="row" id="gameoptions">    
+        <div class="col-4"></div>
+        <div class="col-4">
+          <div class="input-group">
+            <p>Enter your name:</p>
+            <input name='firstname' type='text'>
+          </div>
+          <div class="input-group">
+            <p>Select your token:</p>
+            <label><input type="radio" name="token" value="O" checked="true"> O</label>
+            <label><input type="radio" name="token" value="X"> X</label>          
+          </div>
+          <div class="input-group">
+            <input id="start" type="button" value="start" class="btn" onclick=start()>                
+          </div>                                
+        </div>
+        <div class="col-4"></div>
+      </div>     
 
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js"></script>
+    </div>
     <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
     <script src="src/js/tic-tac-toe.js"></script>
     <script>
-
       var ui = {
         O: 'assets/img/o-ttt.svg',
         X: 'assets/img/x-ttt.svg',
@@ -83,8 +95,7 @@
           tokenImg.data = this[token];
           tokenImg.type = 'image/svg+xml';
           tokenImg.classList.add('token');
-          target.appendChild(tokenImg);
-          //TweenLite.to(tokenImg, 2, {color:"red"});
+          target.appendChild(tokenImg);        
         },
         clickedSquare: function clickedSquare(e) {
           if (!this.gamegrid.classList.contains('clickable') || !this.isSquareEmpty(e.target)){
@@ -139,15 +150,39 @@
           return target.innerHTML === '' ? true : false;
         }        
       };
+
+      function closeModal(){
+        document.getElementById("start").disabled = false;
+        var modalWrapper = document.getElementById("modal");
+        modalWrapper.classList.toggle('hidden');
+      }
+
       function start(){
         var name = document.querySelector('[name=firstname]').value;
-        var token = document.querySelector('[name=token]:checked').value;
+        var token = document.querySelector('[name=token]:checked');
+        var modalWrapper = document.getElementById("modal");
+        var modalMsg = document.getElementById("modal-msg");
+        
+
+        if (token === null){
+          document.getElementById("start").disabled = true;
+          modalMsg.innerHTML = 'Please select a token!';
+          modalWrapper.classList.toggle('hidden');
+          return;
+        }
+
+        if (!name) {
+          document.getElementById("start").disabled = true;
+          modalMsg.innerHTML = 'Please enter your name!';
+          modalWrapper.classList.toggle('hidden');
+          return;
+        }
 
         var player1, player2;
         console.log(token)
-        if (token === 'O'){
+        if (token.value === 'O'){
           player1 = {
-            name: 'Sean',
+            name: name,
             token: 'O',
             type: 'human'
           };
@@ -163,12 +198,16 @@
             type: 'computer'
           };  
           player2 = {
-            name: 'Sean',
+            name: name,
             token: 'X',
             type: 'human'
           };     
         }
-        
+        var gameboard = document.getElementById('gameboard');
+        var gameoptions = document.getElementById('gameoptions');
+
+        gameoptions.classList.toggle('hidden');
+        gameboard.classList.toggle('hidden');
         ui.init(player1, player2);  
       }
 
