@@ -87,8 +87,12 @@ tr {
 .input-group [type=text]{
   width: 100%;
   height: 40px;
-  border-radius: 10px;
+  outline: none;
+  border: none;
+  background: none;
+  border-bottom: 3px solid black;  
 }
+
 
 .input-group label:first-of-type {
   margin-left:160px;

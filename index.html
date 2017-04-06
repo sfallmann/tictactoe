@@ -61,10 +61,12 @@
     <script src="src/js/tic-tac-toe.js"></script>
     <script>
       var ui = {
+        playerName: '',
         O: 'assets/img/o-ttt.svg',
         X: 'assets/img/x-ttt.svg',
         gamegrid: document.querySelector('#grid'),
-        init: function init(player1, player2) {
+        init: function init(player1, player2, name) {
+          this.playerName = name;
           this.game = TicTacToe(player1, player2);          
           this.gamegrid.addEventListener("click", this.clickedSquare.bind(this));
           this.drawBoard();
@@ -74,9 +76,18 @@
             setTimeout(this.computersTurn.bind(this), 1500);
           }
         },
+        emptyBoard: function emptyBoard() {
+          var tokens = document.getElementsByClassName('token');
+          tokens = [].slice.call(tokens);
+
+          tokens.forEach(function(token){
+            token.parentElement.removeChild(token);
+          });
+        },
         drawBoard: function drawBoard(board) {
           var rows = document.getElementsByTagName('tr');
           var td;
+
           for (var i = 3 - 1; i >= 0; i--) {
             for (var j = 0; j < 3; j++) {
               td = document.createElement('td');
@@ -138,6 +149,8 @@
             } else {
               this.displayMessage(status);
             }    
+            
+            this.emptyBoard();
             return;
           }
           var player = this.game.players[0];
@@ -179,7 +192,7 @@
         }
 
         var player1, player2;
-        console.log(token)
+       
         if (token.value === 'O'){
           player1 = {
             name: name,
@@ -208,7 +221,11 @@
 
         gameoptions.classList.toggle('hidden');
         gameboard.classList.toggle('hidden');
-        ui.init(player1, player2);  
+        ui.init(player1, player2, name);  
+      }
+
+      if (ui.playerName) {
+        document.querySelector('[type=text]').value = ui.playerName;
       }
 
     </script>

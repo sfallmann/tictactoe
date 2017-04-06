@@ -174,30 +174,3 @@ var TicTacToe = function TicTacToe(p1, p2) {
   }
 }
 
-
-var player1 = {
-  name: 'Sean',
-  token: 'O',
-  type: 'computer'
-};
-var player2 = {
-  name: 'Michelle',
-  token: 'X',
-  type: 'computer'
-}
-/*
-var game = TicTacToe(player1, player2);
-var over = false
-while(!over){
-  
-  console.log(game.turn());
-  console.log(game.board);
-  var result = checkForWin(game.board, game.counter);
-  console.log(result)
-  if(result !== CONTINUE){
-    over = true;
-  }
-
-}
-*/
-
