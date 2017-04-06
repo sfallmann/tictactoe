@@ -105,8 +105,9 @@
           tokenImg = document.createElement ('object');
           tokenImg.data = this[token];
           tokenImg.type = 'image/svg+xml';
+          tokenImg.id = "token-" + (new Date().getTime()).toString();
           tokenImg.classList.add('token');
-          target.appendChild(tokenImg);        
+          target.appendChild(tokenImg);
         },
         clickedSquare: function clickedSquare(e) {
           if (!this.gamegrid.classList.contains('clickable') || !this.isSquareEmpty(e.target)){
@@ -116,6 +117,7 @@
           var status = checkForWin(this.game.board, this.game.counter);
           if (status === CONTINUE && player.type === 'human'){
             var target = e.target;
+            
             var x = target.dataset.x;
             var y = target.dataset.y;
             var token = player.token;
