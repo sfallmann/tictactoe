@@ -11,10 +11,8 @@
         <div class="col-12"><p id="messages"></p></div>
       </div>      
       <div id="gameboard" class="row hidden">
-        <div class="col-4"></div>
-        <div class="col-4">
-          <div class="wrapper">
-            <img id="grid-svg" src="assets/img/grid.svg">
+        <div class="col-12">
+          <div class="grid-img">
             <table id="grid" class="clickable">
               <tr></tr>
               <tr></tr>
@@ -22,41 +20,39 @@
             </table>              
           </div>       
         </div>
-        <div class="col-4">
-        </div>
       </div>        
       <div class="row">
-        <div class="col-4"></div>
-        <div class="col-4 wrapper">
-          <div id="modal" class="hidden">
-            <div>
-              <img id="close-modal" class="btn" src="assets/img/x-ttt.svg" onclick=closeModal()>
-              <p id="modal-msg"></p>
+        <div class="col-12">
+          <div class="wrapper">
+            <div id="modal" class="hidden">
+              <div>
+                <img id="close-modal" class="btn" src="assets/img/x-ttt.svg" onclick=closeModal()>
+                <p id="modal-msg"></p>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-4"></div>
       </div>    
       <div class="row" id="gameoptions">    
-        <div class="col-4"></div>
-        <div class="col-4">
-          <div class="input-group">
-            <p>Enter your name:</p>
-            <input name='firstname' type='text'>
-          </div>
-          <div class="input-group">
-            <p>Select your token:</p>
-            <label><input type="radio" name="token" value="O" checked="true"> O</label>
-            <label><input type="radio" name="token" value="X"> X</label>          
-          </div>
-          <div class="input-group">
-            <input id="start" type="button" value="start" class="btn" onclick=start()>                
-          </div>                                
+        <div class="col-12">
+          <div class="wrapper">
+            <div class="input-group">
+              <p>Enter your name:</p>
+              <input name='firstname' type='text'>
+            </div>
+            <div class="input-group">
+              <p>Select your token:</p>
+              <label><input type="radio" name="token" value="O" checked="true"> O</label>
+              <label><input type="radio" name="token" value="X"> X</label>          
+            </div>
+            <div class="input-group">
+              <input id="start" type="button" value="start" class="btn" onclick=start()>                
+            </div>     
+          </div>  
         </div>
-        <div class="col-4"></div>
-      </div>     
-
+      </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vivus/0.4.0/vivus.js"></script>
     <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
     <script src="src/js/tic-tac-toe.js"></script>
     <script>

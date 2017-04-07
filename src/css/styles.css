@@ -10,6 +10,7 @@ body {
 
 /* For mobile phones: */
 [class*="col-"] {
+    padding: 15px;
     width: 100%;
 }
 
@@ -77,6 +78,7 @@ tr {
 .input-group {
   width: 100%;
   font-size: 2em;
+  margin: auto;
 }
 
 .input-group p {
@@ -93,10 +95,6 @@ tr {
   border-bottom: 3px solid black;  
 }
 
-
-.input-group label:first-of-type {
-  margin-left:160px;
-}
 
 #start {
   border: none;
@@ -120,24 +118,27 @@ tr {
 
 
 .wrapper {
-  position: relative;
+  width: 320px;
+  margin: auto;
+  padding: 0;
+}
+
+.grid-img {  
+  margin: auto;
+  width: 320px;
+  background-image: url('../../assets/img/grid.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
 
 #grid {
   width: 320px; 
   height: 320px; 
-  position: absolute;
-  top: 2px;
-  z-index: 10;
-  left: 15px;
+  top: 2px; 
+  margin: auto;
 }
 
-#grid-svg {
-  width: 320px;  
-  height: 320px;  
-  left: 14px;
-  position: relative;
-}
 
 #messages {
   height: 110px;
@@ -153,9 +154,9 @@ tr {
 }
 
 #modal {
-  width: 100%;
+  width: 320px;
   height: 150px;
-  top: 75px;
+  top: 225px;
   margin: auto;
   position: absolute;
   background-color: #ECEDAB;
@@ -184,17 +185,7 @@ tr {
     margin: 0 200px 0 200px;
   }
 
-  #grid {
-    width: 360px;  
-    height: 360px;  
-    left: 76px;
-  }
 
-  #grid-svg {
-    width: 360px;  
-    height: 360px;      
-    left: 75px;
-  }
 
   .col-1 {width: 8.33%;}
   .col-2 {width: 16.66%;}
