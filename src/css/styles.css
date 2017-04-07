@@ -59,6 +59,11 @@ tr {
   cursor: pointer;
 }
 
+.token-selection {
+  width: 150px;
+  margin: auto;
+}
+
 .fixed {
   padding: 0;
   position: fixed;
@@ -79,6 +84,7 @@ tr {
   width: 100%;
   font-size: 2em;
   margin: auto;
+  margin-bottom: 20px;
 }
 
 .input-group p {
@@ -93,6 +99,7 @@ tr {
   border: none;
   background: none;
   border-bottom: 3px solid black;  
+  text-align: center;
 }
 
 
@@ -142,7 +149,7 @@ tr {
 
 #messages {
   height: 110px;
-  font-size: 2.5em;
+  font-size: 1.75em;
   text-align: center;
   margin: 0;
   padding: 0;  

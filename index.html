@@ -38,12 +38,14 @@
           <div class="wrapper">
             <div class="input-group">
               <p>Enter your name:</p>
-              <input name='firstname' type='text'>
+              <input name='firstname' type='text' maxlength=15>
             </div>
             <div class="input-group">
               <p>Select your token:</p>
-              <label><input type="radio" name="token" value="O" checked="true"> O</label>
-              <label><input type="radio" name="token" value="X"> X</label>          
+              <div class="token-selection">
+                <label><input type="radio" name="token" value="O" checked="true"> O</label>
+                <label><input type="radio" name="token" value="X"> X</label>  
+              </div>
             </div>
             <div class="input-group">
               <input id="start" type="button" value="start" class="btn" onclick=start()>                
