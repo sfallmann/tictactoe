@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <link href="https://fonts.googleapis.com/css?family=Architects+Daughter" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+  </head>
+  <body>
+    <div>
+      <div class="row  noselect">
+        <div class="col-12"><p id="messages"></p></div>
+      </div>      
+      <div id="gameboard" class="row hidden">
+        <div class="col-12">
+          <object type="image/svg+xml" data="assets/img/grid.svg" id="grid-object">
+          </object>
+          <div class="input-group">
+            <div id="play-again" class="btn hidden" onclick=ui.playAgain()>Play Again</div>                
+          </div>              
+        </div>
+      </div>        
+      <div class="row noselect">
+        <div class="col-12">
+          <div class="wrapper">
+            <div id="modal" class="hidden">
+              <div>
+                <img id="close-modal" class="btn" src="assets/img/x-ttt.svg" onclick=ui.closeModal()>
+                <p id="modal-msg"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>    
+      <div class="row noselect" id="gameoptions">    
+        <div class="col-12">
+          <div class="wrapper">
+            <div class="input-group">
+              <p>Enter your name:</p>
+              <input name='firstname' type='text' maxlength=15 autofocus>
+            </div>
+            <div class="input-group">
+              <p>Select your token:</p>
+              <div class="token-selection">
+                <label><input type="radio" name="token" value="O" checked="true"> O</label>
+                <label><input type="radio" name="token" value="X"> X</label>  
+              </div>
+            </div>
+            <div class="input-group">
+              <input id="start" type="button" value="start" class="btn" onclick=ui.start()>                
+            </div>                   
+          </div>  
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
+    <script src="assets/js/game.tic-tac-toe.js"></script>
+    <script src="assets/js/ui.tic-tac-toe.js"></script>
+  </body>
+</html>
