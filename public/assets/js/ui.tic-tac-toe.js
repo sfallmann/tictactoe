@@ -69,7 +69,7 @@
     playTurn: function playTurn() {
       this.displayMessage(this.game.players[0].name + '\'s turn');
       if (this.game.players[0].type === 'computer') {
-        setTimeout(this.computersTurn.bind(this), 1500);
+        setTimeout(this.computersTurn.bind(this), 1000);
       }
     },
     computersTurn: function computersTurn() {
