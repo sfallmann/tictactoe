@@ -154,9 +154,21 @@
 
       this.toggleGameScreens();
 
-      this.components.gridObj.onload = function(){
+      // The xml document is already fired with 
+      // using the onload event does not work with Mozilla
+      // and Edge
+      var doc = this.components.gridObj.contentDocument;
+      var test = doc.getElementById('grid-svg');
+
+      if (!test) {
+        this.components.gridObj.onload = function() {
         ui.init(player1, player2);  
-      } 
+        }
+      } else {
+        ui.init(player1, player2);  
+      }
+
+
     },
     closeModal: function closeModal() {
       this.components.startBtn.disabled = false;
