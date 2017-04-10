@@ -47,12 +47,13 @@
   // sets token in the location within the board
   // and returns a tile object
   function setTile(board, x, y, token) {
+
     board[x][y] = token;
     return returnTile(x, y, token);
   }
 
   function computerTurn(state, computer, opponent){
-
+    var choice;
     // on the first turn randomly pick a corner
     // otherwise the computer will always pick 0,0 every single time
     if (state.counter === 0){
@@ -70,7 +71,7 @@
 
     }
 
-    var choice;
+
 
     miniMax(state, 0);
     // choice will be set to the best value that bubbles up
@@ -207,9 +208,11 @@
         if (type === 'computer'){
           var opponent = this.players[1].token;
           var result = computerTurn(createState(this), token, opponent);
+
           x = result.x;
           y = result.y;
         }
+
         tile = setTile(this.board, x, y, token)
         this.counter++;
         changePlayers(this.players)

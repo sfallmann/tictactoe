@@ -6,7 +6,7 @@
       gridObj: document.querySelector('#grid-object'),
       name: document.querySelector('[name=firstname]'),
       token: function token(){
-        return document.querySelector('[name=token]:checked');       
+        return document.querySelector('[type=radio]:checked');       
       },
       startBtn: document.querySelector("#start"),
       playAgainBtn: document.querySelector("#play-again"),
@@ -132,7 +132,7 @@
         toggleClass(this.components.modal, 'hidden');
         return;
       }
-
+      
       var player1, player2;
       if (this.components.token().value === 'O'){
         player1 = {
@@ -159,21 +159,24 @@
       }
 
       this.toggleGameScreens();
+      var self = this;
 
       // The xml document is already fired with 
       // using the onload event does not work with Mozilla
       // and Edge
-      var doc = this.components.gridObj.contentDocument;
+
+      var doc = document.querySelector('#grid-object').contentDocument;
       var test = doc.querySelector('#grid-svg');
 
-      if (!test) {
-        this.components.gridObj.onload = function() {
-        ui.init(player1, player2);  
+      if (!test || this.components.gridObj.onload) {
+        this.components.gridObj.onload = function loadObj(){
+          self.init(player1, player2);  
         }
-      } else {
-        ui.init(player1, player2);  
       }
 
+      if (!this.components.gridObj.onload){ 
+        this.init(player1, player2);  
+      }     
 
     },
     closeModal: function closeModal() {
