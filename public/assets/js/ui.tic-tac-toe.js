@@ -3,17 +3,17 @@
   'use strict';  
   window.ui = window.ui || {
     components: {
-      gridObj: document.getElementById('grid-object'),
+      gridObj: document.querySelector('#grid-object'),
       name: document.querySelector('[name=firstname]'),
       token: function token(){
         return document.querySelector('[name=token]:checked');       
       },
-      startBtn: document.getElementById("start"),
-      playAgainBtn: document.getElementById("play-again"),
-      modal: document.getElementById("modal"),
-      modalMsg: document.getElementById("modal-msg"),
-      gameboard: document.getElementById('gameboard'),
-      gameoptions: document.getElementById('gameoptions'),
+      startBtn: document.querySelector("#start"),
+      playAgainBtn: document.querySelector("#play-again"),
+      modal: document.querySelector("#modal"),
+      modalMsg: document.querySelector("#modal-msg"),
+      gameboard: document.querySelector('#gameboard'),
+      gameoptions: document.querySelector('#gameoptions'),
     },
     init: function init(player1, player2) {
       this.game = TicTacToe(player1, player2);    
@@ -22,14 +22,19 @@
       this.playTurn();
     },
     toggleGameScreens: function() {
-      this.components.gameoptions.classList.toggle('hidden');
-      this.components.gameboard.classList.toggle('hidden');            
+      toggleClass(this.components.gameoptions, 'hidden');  
+      toggleClass(this.components.gameboard, 'hidden');     
     },
     emptyBoard: function emptyBoard() {
-      var tokens = this.components.gamegrid.querySelectorAll('[id*=O-]', '[id*=X-]');
-      [].slice.call(tokens).forEach(function(token) {
+      var oTokens = this.components.gamegrid.querySelectorAll('[id*=O-]');  
+      [].slice.call(oTokens).forEach(function(token) {
         token.style.fillOpacity = 0;
       });
+
+      var xTokens = this.components.gamegrid.querySelectorAll('[id*=X-]');  
+      [].slice.call(xTokens).forEach(function(token) {
+        token.style.fillOpacity = 0;
+      });      
     },
     displayMessage: function(msg) {
       var messages = document.querySelector('#messages');
@@ -38,17 +43,17 @@
     placeToken: function placeToken(target, token) {
 
       var values = (target.id.split('-'));
-      var tokenId = token + '-' + values[1] + '-' + values[2];
+      var tokenId = '#' + token + '-' + values[1] + '-' + values[2];
 
-      this.components.gamegrid.getElementById(tokenId).style.fillOpacity = 1;
+      this.components.gamegrid.querySelector(tokenId).style.fillOpacity = 1;
     },
     clickedSquare: function clickedSquare(e) {
-      
+
       var status = this.game.checkForWin(this.game.board, this.game.counter);
 
       if (status === GAMESTATES.CONTINUE && this.game.players[0].type === 'human') {
-        
-        if (!e.target.classList.contains('square')) {
+        var classList = e.target.className.baseVal.split(' ');
+        if (classList.indexOf('square') === -1 ) {
           return;
         }
 
@@ -73,15 +78,15 @@
       }
     },
     computersTurn: function computersTurn() {
-      var gridsvg = this.components.gamegrid.getElementById('grid-svg');
-      gridsvg.classList.toggle('clickable');
+      var gridsvg = this.components.gamegrid.querySelector('#grid-svg');
+      toggleClass(gridsvg, 'clickable');  
 
       var token = this.game.players[0].token;
       var tile = this.game.turn();  
-      var tokenId = token + '-' + tile.x + '-' + tile.y;
+      var tokenId = '#' + token + '-' + tile.x + '-' + tile.y;
 
-      this.placeToken(this.components.gamegrid.getElementById(tokenId), token);
-      gridsvg.classList.toggle('clickable');
+      this.placeToken(this.components.gamegrid.querySelector(tokenId), token);
+      toggleClass(gridsvg, 'clickable');  
 
       this.turnComplete();       
     },
@@ -98,7 +103,7 @@
         } else {
           this.displayMessage(status);
         }    
-        this.components.playAgainBtn.classList.toggle('hidden');
+        toggleClass(this.components.playAgainBtn, 'hidden');  
         return;
       }
 
@@ -108,7 +113,7 @@
     playAgain: function() {
       this.emptyBoard();
       this.displayMessage('');
-      this.components.playAgainBtn.classList.toggle('hidden');
+      toggleClass(this.components.playAgainBtn, 'hidden');      
       this.toggleGameScreens();
     },
     start: function start() {
@@ -116,14 +121,15 @@
       if (this.components.token().value === null){
         this.components.startBtn.disabled = true;
         this.components.modalMsg.innerHTML = 'Please select a token!';
-        this.components.modal.classList.toggle('hidden');
+
+        toggleClass(this.components.modal, 'hidden');
         return;
       }
 
       if (!this.components.name.value) {
         this.components.startBtn.disabled = true;
         this.components.modalMsg.innerHTML = 'Please enter your name!';
-        this.components.modal.classList.toggle('hidden');
+        toggleClass(this.components.modal, 'hidden');
         return;
       }
 
@@ -158,7 +164,7 @@
       // using the onload event does not work with Mozilla
       // and Edge
       var doc = this.components.gridObj.contentDocument;
-      var test = doc.getElementById('grid-svg');
+      var test = doc.querySelector('#grid-svg');
 
       if (!test) {
         this.components.gridObj.onload = function() {
@@ -172,7 +178,29 @@
     },
     closeModal: function closeModal() {
       this.components.startBtn.disabled = false;
-      this.components.modal.classList.toggle('hidden');
+      toggleClass(this.components.modal, 'hidden');
     }  
   };
+
+  // Added for cross browser compatibility
+  // 
+  function toggleClass(el, cls) {
+    if (el.classList) { 
+        el.classList.toggle(cls);
+    } else {
+      var classes = el.className.toString().split(' ');
+      var index = classes.indexOf(cls);
+
+      if (index >= 0) {
+        classes.splice(index, 1);
+      } else {
+        classes.push(cls);
+        el.setAttribute("class", classes);
+      } 
+    }
+  };
+
+
+
+
 })(window);
