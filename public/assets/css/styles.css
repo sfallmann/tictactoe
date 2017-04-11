@@ -75,7 +75,11 @@ tr {
 }
 
 .hidden {
-  display: none;
+  visibility: hidden;
+  position: absolute;
+  z-index: 100;
+  left: 0;
+  top: 0;
 }
 
 .img {

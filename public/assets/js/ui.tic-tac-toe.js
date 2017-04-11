@@ -1,4 +1,6 @@
 ;  
+// document.querySelector is used frequently due to
+// issue IE had selecting nodes within the loaded document
 (function(window) {
   'use strict';  
   window.ui = window.ui || {
@@ -158,26 +160,10 @@
         };     
       }
 
+      console.log(this.components.gridObj);
       this.toggleGameScreens();
-      var self = this;
 
-      // The xml document is already fired with 
-      // using the onload event does not work with Mozilla
-      // and Edge
-
-      var doc = document.querySelector('#grid-object').contentDocument;
-      var test = doc.querySelector('#grid-svg');
-
-      if (!test || this.components.gridObj.onload) {
-        this.components.gridObj.onload = function loadObj(){
-          self.init(player1, player2);  
-        }
-      }
-
-      if (!this.components.gridObj.onload){ 
-        this.init(player1, player2);  
-      }     
-
+      this.init(player1, player2);  
     },
     closeModal: function closeModal() {
       this.components.startBtn.disabled = false;
@@ -186,7 +172,7 @@
   };
 
   // Added for cross browser compatibility
-  // 
+  // classList is not available in IE
   function toggleClass(el, cls) {
     if (el.classList) { 
         el.classList.toggle(cls);
